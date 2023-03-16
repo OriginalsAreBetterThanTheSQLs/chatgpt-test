@@ -1,0 +1,844 @@
+%%[
+VAR @rpCareer, @leadSource, @campaignId
+SET @rpCareer = 'Graduate'
+SET @leadSource = 'LP Web Form'
+/* 
+|  Below, we are hardcoding the CammpaingId becasue this form will only be used for the
+|  Master in Applied Physiology page, https://sites.education.miami.edu/rfi/apph/
+*/
+SET @CampaignId = "7011C000001QuQAQA0"
+]%%
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//welcome.miami.edu/_assets/images/um-icon.ico" rel="icon" type="image/x-icon"/>
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.0-beta.1/themes/smoothness/jquery-ui.css" />
+    <style>
+      html * {
+        font-family: Arial;
+      }
+      /* loading spinner */
+      #loading {
+        display:none;
+        position:fixed;
+        left:0;
+        top:0;
+        width:100%;
+        height:100%;
+        background:rgba(0,81,48,0.5);
+        z-index:1000;
+      }
+      #loadingcontent  {
+        display:table;
+        position:fixed;
+        left:0;
+        top:0;
+        width:100%;
+        height:100%;
+      }
+      #loadingspinner  {
+        display: table-cell;
+        vertical-align:middle;
+        width: 100%;
+        text-align: center;
+        font-size:larger;
+        padding-top:80px;
+      }
+    </style>
+    <style>
+      .error {
+        color: red;
+        padding: 0;
+        margin: 0;
+        font-size: .8em;
+      }
+    </style>
+    <script type="text/javascript">
+      if (window.location.protocol != 'https:') {
+        window.location = document.URL.replace("http://","https://");
+      }
+    </script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.1.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>Graduate Inquiry Form
+    </title>
+  </head>
+  <body>
+    <div id="loading">
+      <div id="loadingcontent">
+      </div>
+    </div>
+  
+    <div class="error_box" style="display: block;">
+    </div>
+        <div class="error_box" style="display: block;">
+    </div>
+    <form id="student-form" action="https://go.miami.edu/formhandler" method="post">
+      <input name="submitted" type="hidden" value="true" />
+      <div 
+           class="g-recaptcha" 
+           data-sitekey="6Lc9LfskAAAAAPLtxDmADexih83CL_XaRvl7XZ1k" 
+           data-callback="grecaptchaCallback" 
+           data-size="invisible"
+           >
+      </div>   
+      <script>
+        var form = document.getElementById('student-form');
+        form.addEventListener('submit', grecaptchaValidate);
+        function grecaptchaCallback() {
+          return new Promise(function (resolve, reject) {
+            if (grecaptcha.getResponse() !== '') {
+              form.submit();
+            }
+            grecaptcha.reset();
+          }
+                            )
+        }
+        function grecaptchaValidate(e) {
+          e.preventDefault();
+          grecaptcha.execute();
+        }
+      </script>
+    <form name="student-form" action="%%=RequestParameter('PAGEURL')=%%" method="POST">
+      <input name="submitted" type="hidden" value="true" />
+      <div>
+        <div class="error">
+        </div>
+        <label id="First_Name__c" class="required">First Name:<span class="required-ast">*</span></label>
+        <input type="text" maxlength="40" name="First_Name__c" id="First_Name__c" value="" size="40" />
+      </div>
+      <div>
+        <div class="error">
+        </div>
+        <label id="Last_Name__c" class="required">Last Name:<span class="required-ast">*</span></label>
+        <input type="text" maxlength="80" name="Last_Name__c" id="Last_Name__c" value="" size="40" value="" />
+      </div>
+      <div>
+        <div class="error">
+        </div>
+        <label class="required">Email Address:<span class="required-ast">*</span></label>
+        <input type="text" maxlength="80" name="Email__c" id="Email__c" value="" size="40" value="" />
+      </div>
+      <div>
+        <div class="error">
+        </div>
+        <label class="required">Mobile Phone:<span class="required-ast">*</span></label>
+        <input type="text" maxlength="40" name="Mobile_Phone__c" id="Mobile_Phone__c" value="" size="40" value="" />
+      </div>
+      <input type="submit" value="Submit" id="button-submit" onclick="block();" />
+      <span style="display: none;" id="post_code">%%[[name="FormPost";type="POST"]  ]%%</span>
+      <!-- AMP Processing Placeholder DO NOT REMOVE -->
+      <script id="hiddenlpsubmitdiv" style="display: none;">
+      </script>
+      <input type="hidden" name="Campaign_Member_Status__c" id="Campaign_Member_Status__c" value="Filled Out Form" />
+      <input type="hidden" name="Journey_Entry__c" id="Journey_Entry__c" value="RFI Thank You" />
+      <input type="hidden" name="Marketing_Campaign_Member_Status__c" id="Marketing_Campaign_Member_Status__c" value="Inquiry or Registered" />
+      <input type="hidden" name="Marketing_Campaign_Reference_ID__c" id="Marketing_Campaign_Reference_ID__c" value="7011C000001QuQAQA0" />
+      <input type="hidden" name="Admit_Type__c" id="Admit_Type__c" value="New Student" />
+      <input type="hidden" name="Lead_Source__c" id="Lead_Source__c" value="%%=v(@leadSource)=%%" />
+      <input type="hidden" name="Thank_You_Confirmation__c" id="Thank_You_Confirmation__c" value="TRUE" />
+      <input type="hidden" name="Campaign__c" id="Campaign__c" value="%%=v(@campaignId)=%%" />
+      <input type="hidden" name="Interaction_Status__c" id="Interaction_Status__c" value="New" />
+      <input type="hidden" name="Recruitment_Plan__c" id="Recruitment_Plan__c" value="a0I1C00000KKIRpUAP" />
+    </form>
+    %%[ ENDIF ]%%
+    <!-- Form Scripts -->
+    <!-- <script type="text/javascript" src="//image.connect.miami.edu/lib/fe9513727666027d73/m/1/Miami+Marketing+Campaign+Cookie+w+Campaign+Limit.js"></script> -->
+    <script type="text/javascript">
+      (function() {
+        //Set Variables
+        var pageURL = document.URL;
+        var cookieName = 'AdvertisingCampaign';
+        //UPDATE: Identify Cookie Name
+        var cookieValue = getParameter(pageURL, 'utm_content');
+        //UPDATE: Identify URL parameter
+        var cookieExpiration = 30;
+        var cookieDomain = location.hostname.split('.').reverse()[1] + "." + location.hostname.split('.').reverse()[0]
+        var setField = 'Marketing_Campaign_Reference_ID__c';
+        //SFDC for Marketing_Campaign__c = 00N1500000G5fKw //UPDATE: Field ID that will be set on the forms
+        /*
+ if cookie value is not empty (!= ''), write cookie
+ */
+        if (cookieValue.length === 18 && cookieValue.substring(0,3) == '701') {
+          createCookie(cookieName,cookieValue,cookieExpiration,cookieDomain);
+          //  console.log('Cookie Created - 18 Digit - Logic Pass')
+        }
+        else if (cookieValue.length === 15 && cookieValue.substring(0,3) == '701') {
+          createCookie(cookieName,cookieValue,cookieExpiration,cookieDomain);
+          //  console.log('Cookie Created - 15 Digit - Logic Pass')
+        }
+        else {
+          //  console.log('No Parameter to Set')
+        }
+        if (document.getElementById(setField) && cookieValue.length === 18 && cookieValue.substring(0,3) == '701') {
+          document.getElementById(setField).value = cookieValue
+          //  console.log('Field Set by Query Param - 18 Digit')
+        }
+        else if (document.getElementById(setField) && cookieValue.length === 15 && cookieValue.substring(0,3) == '701') {
+          document.getElementById(setField).value = cookieValue
+          //  console.log('Field Set by Query Param - 15 Digit')
+        }
+        else if (document.getElementById(setField)) {
+          getCookie(cookieName,cookieDomain);
+          setFieldValue();
+          //  console.log('Field Set by Cookie Value - Logic Pass')
+        }
+        else {
+          // console.log('No Field to Set')
+        }
+        /*
+   if field exists and cookie has a value, set field
+   */
+        function getParameter(queryString, parameterName) {
+          /* Add "=" to the parameter name (i.e. parameterName=value) */
+          var parameterName = parameterName + "=";
+          if ( queryString.length > 0 ) {
+            /* Find the beginning of the string */
+            begin = queryString.indexOf ( parameterName );
+            /* If the parameter name is not found, skip it, otherwise return the value */
+            if ( begin != -1 ) {
+              /* Add the length (integer) to the beginning */
+              begin += parameterName.length;
+              /* Multiple parameters are separated by the "&" sign */
+              end = queryString.indexOf ( "&" , begin );
+              if ( end == -1 ) {
+                end = queryString.length;
+              }
+              /* Return the string */
+              return unescape ( queryString.substring ( begin, end ) );
+            }
+            /* Return "" if no parameter has been found */
+            return "";
+          }
+        }
+        function createCookie(name,value,days,domain) {
+          if (days) {
+            var date = new Date();
+            date.setTime(date.getTime()+(days*24*60*60*1000));
+            var expires = "; expires="+date.toGMTString();
+          }
+          else {
+            var expires = "";
+          }
+          document.cookie = name+"="+value+expires+"; domain="+domain+"; path=/";
+        }
+        // createCookie(cookieName,cookieValue,cookieExpiration);
+        function getCookie(name,domain) {
+          var re = new RegExp(cookieName + "=([^;]+)");
+          var value = re.exec(document.cookie);
+          return (value != null) ? unescape(value[1]) : null;
+        }
+        function setFieldValue() {
+          if ( getCookie(cookieName) !== '' ) {
+            document.getElementById(setField).value = getCookie(cookieName,cookieDomain)
+            //  console.log('Set Field Value Success')
+          }
+          else {
+            //  console.log('Failed to Set Field Value')
+            return false
+          }
+        }
+      }
+      )();
+    </script>
+    <!-- <script type="text/javascript" src="//image.connect.miami.edu/lib/fe9513727666027d73/m/1/Birthday+Selection.js"></script> -->
+    <script type="text/javascript">
+      var birthdayMonthClass = '.month-dropdown';
+      var birthdayDayClass = '.day-dropdown';
+      var birthdayYearClass = '.year-dropdown';
+      var birthdayAreaClass = '.date-entry-dropdowns';
+      var hiddenBirthdayId = '#Birthdate__c';
+      watchBirthdayController(birthdayAreaClass, birthdayMonthClass, birthdayDayClass, birthdayYearClass, hiddenBirthdayId);
+      function watchBirthdayController(birthdayDropdownArea, birthdayMonthClass, birthdayDayClass, birthdayYearClass, hiddenBirthdayId){
+        $(birthdayDropdownArea + ' select').on('change', function(){
+          var day = getOptionValue(birthdayDayClass);
+          var month = getOptionValue(birthdayMonthClass);
+          var year = getOptionValue(birthdayYearClass);
+          var isDateComplete = isBirthdayComplete(day, month, year);
+          if(isDateComplete){
+            var validDate = constructValidDateText(day, month, year);
+            setHiddenBirthday(validDate, hiddenBirthdayId);
+          }
+        }
+                                              )
+      }
+      //view
+      function getOptionValue(classOfSelect){
+        return $(classOfSelect + ' option:selected').val().trim();
+      }
+      function setHiddenBirthday(validDate, hiddenBirthdayId){
+        $(hiddenBirthdayId).val(validDate);
+      }
+      //model
+      function isBirthdayComplete(day, month, value){
+        var allDates = [day, month, value];
+        for (var i = 0; i < allDates.length; i++) {
+          if (allDates[i] == "") {
+            return false
+          }
+        }
+        return true
+        function isNull(v){
+          if (v===null){
+            return true
+          }
+          else {
+            return false
+          }
+        }
+      }
+      function constructValidDateText(day, month, year){
+        var validDateFormat = year + "-" + month + "-" + day;
+        return validDateFormat
+      }
+    </script>
+    <!-- <script type="text/javascript" src="//image.connect.miami.edu/lib/fe9513727666027d73/m/1/State+Province+Drop+Down.js"></script> -->
+    <script type="text/javascript">
+      var countryDropdownClass = '.country-dropdown';
+      var stateDropdownClass = '.state-province-area';
+      var stateProvinceLabel = '.state-province-label';
+      var canadianProvinces =  '.canadian-province';
+      var usStates = '.us-states';
+      var usDropdownDefault = ".us-default-option";
+      var stateProvinceLabel = ".state-province-label";
+      var caDropdownDefault = ".ca-default-option";
+      $(usDropdownDefault).hide();
+      $(caDropdownDefault).hide();
+      countryStateVisibilityController(countryDropdownClass, stateDropdownClass, canadianProvinces, usDropdownDefault, caDropdownDefault, stateProvinceLabel);
+      function countryStateVisibilityController(countryDropdownClass, stateDropdownClass, canadianProvinces, usDropdownDefault, caDropdownDefault, stateProvinceLabel){
+        hideStateDropdown(stateDropdownClass);
+        $(countryDropdownClass).on('change', function(){
+          var country = getCountry(this);
+          var isUs = isCountry(country, "United States");
+          var isCanada = isCountry(country, "Canada");
+          if(isUs){
+            enableStateDropdown(stateDropdownClass);
+            showCountry(usStates);
+            hideCountry(canadianProvinces);
+            setDefaultOptionText(usDropdownDefault, caDropdownDefault);
+            setLabel(stateProvinceLabel, 'State:<span class="required-ast">*</span>');
+          }
+          else if(isCanada){
+            enableStateDropdown(stateDropdownClass);
+            showCountry(canadianProvinces);
+            hideCountry(usStates);
+            setDefaultOptionText(caDropdownDefault, usDropdownDefault);
+            setLabel(stateProvinceLabel, 'Province:<span class="required-ast">*</span>');
+          }
+          else {
+            hideStateDropdown(stateDropdownClass);
+          }
+        }
+                                  )
+      }
+      //view
+      function getCountry(selected){
+        return $(selected).val();
+      }
+      function enableStateDropdown(stateDropdownClass){
+        $(stateDropdownClass).show();
+      }
+      function hideStateDropdown(stateDropdownClass){
+        $(stateDropdownClass).hide();
+      }
+      function showCountry(country){
+        $(country).show();
+      }
+      function hideCountry(country){
+        $(country).hide();
+      }
+      function setDefaultOptionText(toShowClass, toHideClass) {
+        $(toShowClass).show().prop('selected', true);
+        $(toHideClass).hide();
+      }
+      function setLabel(labelClass, labelText){
+        $(labelClass).html(labelText);
+      }
+      //model
+      function isCountry(selectedCountry, countryToTest){
+        if(selectedCountry==countryToTest){
+          return true
+        }
+        else {
+          return false
+        }
+      }
+    </script>
+    <!-- <script type="text/javascript" src="//image.connect.miami.edu/lib/fe9513727666027d73/m/1/Graduate+Recruitment+School+Lookup.js"></script> -->
+    <script type="text/javascript">
+      //$.noConflict();
+      $(function() {
+        $.ajax({
+          /*url: "//pages.connect.miami.edu/page.aspx?QS=38dfbe491fab00ea0d3058c0c7dd18310b3233b88b87b59c",*/
+          url: "//go.miami.edu/getgraduateschools",
+          dataType: "xml",
+          success: function( xmlResponse ) {
+            var data = $( "row", xmlResponse ).map(function() {
+              //var state = $( "STATE", this ).text() ? ($.trim( $( "STATE", this ).text() ) + " - ") : "";
+              //var ceeb = $( "ATP_CD", this ).text() ? ($.trim( $( "ATP_CD", this ).text() )) : "";
+              var name = $( "name", this ).text() ? ($.trim( $( "name", this ).text() )) : "";
+              var id = $( "id", this ).text() ? ($.trim( $( "id", this ).text() )) : "";
+              return {
+                //value: $( "DESCR", this ).text() + " - " + state + $( "COUNTRY", this ).text(),
+                value: $( "name", this ).text(),
+                id: id
+              };
+            }
+                                                  ).get();
+            $( ".school-name-form-lookup" ).autocomplete({
+              source: data,
+              minLength: 3,
+              select: function(e, ui) {
+                $(".school-name-form-lookup").attr("DESCR","").val(ui.item.value);
+                $("#School_Name__c").val(ui.item.id);
+                //does not look like populates a hidden field in the old form... won't do anything on this, but should ask about if is should
+              }
+            }
+                                                        );
+          }
+        }
+              );
+      }
+       );
+    </script>
+    <!-- validator js library -->
+    <!-- <script type="text/javascript" src="//pages.connect.miami.edu/page.aspx?QS=38dfbe491fab00ea9e481d66f575de9c38899d142636e212"></script> -->
+    <script type="text/javascript">
+      /*
+  * validate.js 2.0.1
+  * Copyright (c) 2011 - 2015 Rick Harrison, //rickharrison.me
+  * validate.js is open sourced under the MIT license.
+  * Portions of validate.js are inspired by CodeIgniter.
+  * //rickharrison.github.com/validate.js
+  */
+      (function(r,t,l){
+        var u={
+          required:"The %s field is required.",matches:"The %s field does not match the %s field.","default":"The %s field is still set to default, please change.",valid_email:"The %s field must contain a valid email address.",valid_emails:"The %s field must contain all valid email addresses.",min_length:"The %s field must be at least %s characters in length.",max_length:"The %s field must not exceed %s characters in length.",exact_length:"The %s field must be exactly %s characters in length.",
+          greater_than:"The %s field must contain a number greater than %s.",less_than:"The %s field must contain a number less than %s.",alpha:"The %s field must only contain alphabetical characters.",alpha_numeric:"The %s field must only contain alpha-numeric characters.",alpha_dash:"The %s field must only contain alpha-numeric characters, underscores, and dashes.",numeric:"The %s field must contain only numbers.",integer:"The %s field must contain an integer.",decimal:"The %s field must contain a decimal number.",
+          is_natural:"The %s field must contain only positive numbers.",is_natural_no_zero:"The %s field must contain a number greater than zero.",valid_ip:"The %s field must contain a valid IP.",valid_base64:"The %s field must contain a base64 string.",valid_credit_card:"The %s field must contain a valid credit card number.",is_file_type:"The %s field must contain only %s files.",valid_url:"The %s field must contain a valid URL.",greater_than_date:"The %s field must contain a more recent date than %s.",less_than_date:"The %s field must contain an older date than %s.",
+          greater_than_or_equal_date:"The %s field must contain a date that's at least as recent as %s.",less_than_or_equal_date:"The %s field must contain a date that's %s or older."}
+        ,v=function(a){
+        }
+        ,w=/^(.+?)\[(.+)\]$/,g=/^[0-9]+$/,x=/^\-?[0-9]+$/,m=/^\-?[0-9]*\.?[0-9]+$/,q=/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,y=/^[a-z]+$/i,z=/^[a-z0-9]+$/i,A=/^[a-z0-9_\-]+$/i,B=/^[0-9]+$/i,C=/^[1-9][0-9]*$/i,D=/^((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})$/i,
+            E=/[^a-zA-Z0-9\/\+=]/i,F=/^[\d\-\s]+$/,G=/^((http|https):\/\/(\w+:{0,1}\w*@)?(\S+)|)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/,H=/\d{4}-\d{1,2}-\d{1,2}/,f=function(a,c,b){
+              this.callback=b||v;
+              this.errors=[];
+              this.fields={
+              };
+              this.form=this._formByNameOrNode(a)||{
+              };
+              this.messages={
+              };
+              this.handlers={
+              };
+              this.conditionals={
+              };
+              a=0;
+              for(b=c.length;a<b;a++){
+                var d=c[a];
+                if((d.name||d.names)&&d.rules)if(d.names)for(var n=0,f=d.names.length;n<f;n++)this._addField(d,d.names[n]);
+                  else this._addField(d,d.name);
+                else console.warn("validate.js: The following field is being skipped due to a misconfiguration:"),
+                  console.warn(d),console.warn("Check to ensure you have properly configured a name and rules for this field")}
+              var e=this.form.onsubmit;
+              this.form.onsubmit=function(a){
+                return function(b){
+                  try{
+                    return a._validateForm(b)&&(e===l||e())}
+                  catch(c){
+                  }
+                }
+              }
+              (this)}
+        ,p=function(a,c){
+          var b;
+          if(0<a.length&&("radio"===a[0].type||"checkbox"===a[0].type))for(b=0,elementLength=a.length;b<elementLength;b++){
+            if(a[b].checked)return a[b][c]}
+          else return a[c]};
+        f.prototype.setMessage=function(a,c){
+          this.messages[a]=c;
+          return this};
+        f.prototype.registerCallback=function(a,c){
+          a&&"string"===typeof a&&c&&"function"===typeof c&&(this.handlers[a]=c);
+          return this};
+        f.prototype.registerConditional=function(a,c){
+          a&&"string"===typeof a&&c&&"function"===typeof c&&(this.conditionals[a]=c);
+          return this};
+        f.prototype._formByNameOrNode=function(a){
+          return"object"===typeof a?a:t.forms[a]};
+        f.prototype._addField=function(a,c){
+          this.fields[c]={
+            name:c,display:a.display||c,rules:a.rules,depends:a.depends,id:null,element:null,type:null,value:null,checked:null}
+        };
+        f.prototype._validateForm=function(a){
+          this.errors=[];
+          for(var c in this.fields)if(this.fields.hasOwnProperty(c)){
+            var b=this.fields[c]||{
+            }
+            ,d=this.form[b.name];
+            d&&d!==l&&(b.id=p(d,"id"),b.element=d,b.type=0<d.length?d[0].type:d.type,b.value=p(d,"value"),b.checked=p(d,"checked"),b.depends&&"function"===typeof b.depends?b.depends.call(this,b)&&this._validateField(b):b.depends&&"string"===typeof b.depends&&this.conditionals[b.depends]?this.conditionals[b.depends].call(this,b)&&this._validateField(b):this._validateField(b))}
+          "function"===
+            typeof this.callback&&this.callback(this.errors,a);
+          0<this.errors.length&&(a&&a.preventDefault?a.preventDefault():event&&(event.returnValue=!1));
+          return!0};
+        f.prototype._validateField=function(a){
+          var c,b,d=a.rules.split("|"),f=a.rules.indexOf("required"),I=!a.value||""===a.value||a.value===l;
+          c=0;
+          for(ruleLength=d.length;c<ruleLength;c++){
+            var e=d[c];
+            b=null;
+            var h=!1,k=w.exec(e);
+            if(-1!==f||-1!==e.indexOf("!callback_")||!I)if(k&&(e=k[1],b=k[2]),"!"===e.charAt(0)&&(e=e.substring(1,e.length)),"function"===
+                                                           typeof this._hooks[e]?this._hooks[e].apply(this,[a,b])||(h=!0):"callback_"===e.substring(0,9)&&(e=e.substring(9,e.length),"function"===typeof this.handlers[e]&&!1===this.handlers[e].apply(this,[a.value,b,a])&&(h=!0)),h){
+              k=this.messages[a.name+"."+e]||this.messages[e]||u[e];
+              h="An error has occurred with the "+a.display+" field.";
+              k&&(h=k.replace("%s",a.display),b&&(h=h.replace("%s",this.fields[b]?this.fields[b].display:b)));
+              var g;
+              for(b=0;b<this.errors.length;b+=1)a.id===this.errors[b].id&&(g=this.errors[b]);
+              e=g||{
+                id:a.id,display:a.display,element:a.element,name:a.name,message:h,messages:[],rule:e};
+              e.messages.push(h);
+              g||this.errors.push(e)}
+          }
+        };
+        f.prototype._getValidDate=function(a){
+          if(!a.match("today")&&!a.match(H))return!1;
+          var c=new Date;
+          a.match("today")||(a=a.split("-"),c.setFullYear(a[0]),c.setMonth(a[1]-1),c.setDate(a[2]));
+          return c};
+        f.prototype._hooks={
+          required:function(a){
+            var c=a.value;
+            return"checkbox"===a.type||"radio"===a.type?!0===a.checked:null!==c&&""!==c}
+          ,"default":function(a,c){
+            return a.value!==
+              c}
+          ,matches:function(a,c){
+            var b=this.form[c];
+            return b?a.value===b.value:!1}
+          ,valid_email:function(a){
+            return q.test(a.value)}
+          ,valid_emails:function(a){
+            a=a.value.split(/\s*,\s*/g);
+            for(var c=0,b=a.length;c<b;c++)if(!q.test(a[c]))return!1;
+            return!0}
+          ,min_length:function(a,c){
+            return g.test(c)?a.value.length>=parseInt(c,10):!1}
+          ,max_length:function(a,c){
+            return g.test(c)?a.value.length<=parseInt(c,10):!1}
+          ,exact_length:function(a,c){
+            return g.test(c)?a.value.length===parseInt(c,10):!1}
+          ,greater_than:function(a,
+                                  c){
+            return m.test(a.value)?parseFloat(a.value)>parseFloat(c):!1}
+          ,less_than:function(a,c){
+            return m.test(a.value)?parseFloat(a.value)<parseFloat(c):!1}
+          ,alpha:function(a){
+            return y.test(a.value)}
+          ,alpha_numeric:function(a){
+            return z.test(a.value)}
+          ,alpha_dash:function(a){
+            return A.test(a.value)}
+          ,numeric:function(a){
+            return g.test(a.value)}
+          ,integer:function(a){
+            return x.test(a.value)}
+          ,decimal:function(a){
+            return m.test(a.value)}
+          ,is_natural:function(a){
+            return B.test(a.value)}
+          ,is_natural_no_zero:function(a){
+            return C.test(a.value)}
+          ,
+          valid_ip:function(a){
+            return D.test(a.value)}
+          ,valid_base64:function(a){
+            return E.test(a.value)}
+          ,valid_url:function(a){
+            return G.test(a.value)}
+          ,valid_credit_card:function(a){
+            if(!F.test(a.value))return!1;
+            var c=0,b=0,d=!1;
+            a=a.value.replace(/\D/g,"");
+            for(var f=a.length-1;0<=f;f--)b=a.charAt(f),b=parseInt(b,10),d&&9<(b*=2)&&(b-=9),c+=b,d=!d;
+            return 0===c%10}
+          ,is_file_type:function(a,c){
+            if("file"!==a.type)return!0;
+            var b=a.value.substr(a.value.lastIndexOf(".")+1),d=c.split(","),f=!1,g=0,e=d.length;
+            for(g;g<e;g++)b.toUpperCase()==
+              d[g].toUpperCase()&&(f=!0);
+            return f}
+          ,greater_than_date:function(a,c){
+            var b=this._getValidDate(a.value),d=this._getValidDate(c);
+            return d&&b?b>d:!1}
+          ,less_than_date:function(a,c){
+            var b=this._getValidDate(a.value),d=this._getValidDate(c);
+            return d&&b?b<d:!1}
+          ,greater_than_or_equal_date:function(a,c){
+            var b=this._getValidDate(a.value),d=this._getValidDate(c);
+            return d&&b?b>=d:!1}
+          ,less_than_or_equal_date:function(a,c){
+            var b=this._getValidDate(a.value),d=this._getValidDate(c);
+            return d&&b?b<=d:!1}
+        };
+        r.FormValidator=
+          f}
+      )(window,document);
+      "undefined"!==typeof module&&module.exports&&(module.exports=FormValidator);
+    </script>
+    <!-- validator js instance local -->
+    <!-- <script type="text/javascript" src="//pages.connect.miami.edu/page.aspx?QS=38dfbe491fab00ea644986c89a087a5aac1bbc2b097eb56d"></script> -->
+    <script type="text/javascript">
+      var validator = new FormValidator('student-form', [{
+        name: 'First_Name__c',
+        display: 'First Name',
+        rules: 'required'
+      }
+                                                         , {
+                                                           name: 'Last_Name__c',
+                                                           display: 'Last Name',
+                                                           rules: 'required'
+                                                         }
+                                                         , {
+                                                           name: 'Mailing_State__c',
+                                                           display: 'State',
+                                                           rules: 'required',
+                                                           depends: function() {
+                                                             //this depends function is causing the required rule to be dependent upon whether the country is equal to US or Canada (//github.com/rickharrison/validate.js) (//rickharrison.github.io/validate.js/)
+                                                             var stateValidate = $('#Mailing_Country__c').val();
+                                                             var stateEntry = $('#Mailing_State__c').val();
+                                                             if (stateValidate === ('United States') || stateValidate === ('Canada')) {
+                                                               return true;
+                                                             }
+                                                             else {
+                                                               return false;
+                                                             }
+                                                           }
+                                                         }
+                                                         , {
+                                                           name: 'Mailing_Postal_Code__c',
+                                                           display: 'Zip Code',
+                                                           rules: 'callback_validate_zip'
+                                                         }
+                                                         , {
+                                                           name: 'Email__c',
+                                                           display: 'Email',
+                                                           rules: 'required|valid_email'
+                                                         }
+                                                         , {
+                                                           name: 'Mobile_Phone__c',
+                                                           display: 'Mobile Phone',
+                                                           rules: 'required'
+                                                         }
+                                                         , {
+                                                           name: 'Term__c',
+                                                           display: 'Term',
+                                                           rules: 'required'
+                                                         }
+                                                         , {
+                                                           name: 'Admit_Type__c',
+                                                           display: 'Admission Type',
+                                                           rules: 'required'
+                                                         }
+                                                         , {
+                                                           name: 'Recruitment_Plan__c',
+                                                           display: 'Recruitment Plan',
+                                                           rules: 'required'
+                                                         }
+                                                        ], function(errors, event) {
+        $(".error").each(function(){
+          $(this).html("");
+        }
+                        )
+        if (errors.length > 0) {
+          event.preventDefault();
+          var errorString = '';
+          for (var i = 0, errorLength = errors.length; i < errorLength; i++) {
+            errorHtml = '<p>' + errors[i].message + '</p>';
+            $(errors[i].element).siblings(".error").html(errorHtml);
+          }
+          unblock();
+        }
+      }
+                                       );
+      validator.registerCallback('check_other_dates', function(){
+        varDayValue = $('.day-dropdown').val();
+        varYearValue = $('.year-dropdown').val();
+        if(varDayValue=="" || varYearValue==""){
+          return false
+        }
+        return true
+      }
+                                )
+      validator.registerCallback('validate_zip', function(){
+        var country = $("#Mailing_Country__c").val();
+        var postalCode = $("#Mailing_Postal_Code__c").val();
+        var us = new RegExp("^\\d{5}(-{0,1}\\d{4})?$");
+        var ca = new RegExp(/([ABCEGHJKLMNPRSTVXY]\d)([ABCEGHJKLMNPRSTVWXYZ]\d){2}/i);
+        if (country === "United States") {
+          if((us.test(postalCode.toString()))) {
+            return true
+          }
+          else {
+            return false
+          }
+        }
+        else if (country === "Canada") {
+          if (ca.test(postalCode.toString().replace(/\W+/g, ''))) {
+            return true
+          }
+          else {
+            return false
+          }
+        }
+        else {
+          return true
+        }
+      }
+                                ).setMessage('validate_zip', "You must enter a valid zip code");
+      function block() {
+        $("#loading").fadeIn();
+        var opts = {
+          lines: 12, // The number of lines to draw
+          length: 7, // The length of each line
+          width: 4, // The line thickness
+          radius: 10, // The radius of the inner circle
+          color: '#000', // #rgb or #rrggbb
+          speed: 1, // Rounds per second
+          trail: 60, // Afterglow percentage
+          shadow: false, // Whether to render a shadow
+          hwaccel: false // Whether to use hardware acceleration
+        };
+        var target = document.getElementById('loading');
+        var spinner = new Spinner(opts).spin(target);
+      }
+      function unblock() {
+        $("#loading").fadeOut();
+      }
+      // http://spin.js.org/#v2.3.2
+      !function(a,b){
+        "object"==typeof module&&module.exports?module.exports=b():"function"==typeof define&&define.amd?define(b):a.Spinner=b()}
+      (this,function(){
+        "use strict";
+        function a(a,b){
+          var c,d=document.createElement(a||"div");
+          for(c in b)d[c]=b[c];
+          return d}
+        function b(a){
+          for(var b=1,c=arguments.length;c>b;b++)a.appendChild(arguments[b]);
+          return a}
+        function c(a,b,c,d){
+          var e=["opacity",b,~~(100*a),c,d].join("-"),f=.01+c/d*100,g=Math.max(1-(1-a)/b*(100-f),a),h=j.substring(0,j.indexOf("Animation")).toLowerCase(),i=h&&"-"+h+"-"||"";
+          return m[e]||(k.insertRule("@"+i+"keyframes "+e+"{0%{opacity:"+g+"}"+f+"%{opacity:"+a+"}"+(f+.01)+"%{opacity:1}"+(f+b)%100+"%{opacity:"+a+"}100%{opacity:"+g+"}}",k.cssRules.length),m[e]=1),e}
+        function d(a,b){
+          var c,d,e=a.style;
+          if(b=b.charAt(0).toUpperCase()+b.slice(1),void 0!==e[b])return b;
+          for(d=0;d<l.length;d++)if(c=l[d]+b,void 0!==e[c])return c}
+        function e(a,b){
+          for(var c in b)a.style[d(a,c)||c]=b[c];
+          return a}
+        function f(a){
+          for(var b=1;b<arguments.length;b++){
+            var c=arguments[b];
+            for(var d in c)void 0===a[d]&&(a[d]=c[d])}
+          return a}
+        function g(a,b){
+          return"string"==typeof a?a:a[b%a.length]}
+        function h(a){
+          this.opts=f(a||{
+          }
+                      ,h.defaults,n)}
+        function i(){
+          function c(b,c){
+            return a("<"+b+' xmlns="urn:schemas-microsoft.com:vml" class="spin-vml">',c)}
+          k.addRule(".spin-vml","behavior:url(#default#VML)"),h.prototype.lines=function(a,d){
+            function f(){
+              return e(c("group",{
+                coordsize:k+" "+k,coordorigin:-j+" "+-j}
+                        ),{
+                width:k,height:k}
+                      )}
+            function h(a,h,i){
+              b(m,b(e(f(),{
+                rotation:360/d.lines*a+"deg",left:~~h}
+                     ),b(e(c("roundrect",{
+                arcsize:d.corners}
+                            ),{
+                width:j,height:d.scale*d.width,left:d.scale*d.radius,top:-d.scale*d.width>>1,filter:i}
+                          ),c("fill",{
+                color:g(d.color,a),opacity:d.opacity}
+                             ),c("stroke",{
+                opacity:0}
+                                ))))}
+            var i,j=d.scale*(d.length+d.width),k=2*d.scale*j,l=-(d.width+d.length)*d.scale*2+"px",m=e(f(),{
+              position:"absolute",top:l,left:l}
+                                                                                                     );
+            if(d.shadow)for(i=1;i<=d.lines;i++)h(i,-2,"progid:DXImageTransform.Microsoft.Blur(pixelradius=2,makeshadow=1,shadowopacity=.3)");
+            for(i=1;i<=d.lines;i++)h(i);
+            return b(a,m)}
+            ,h.prototype.opacity=function(a,b,c,d){
+            var e=a.firstChild;
+            d=d.shadow&&d.lines||0,e&&b+d<e.childNodes.length&&(e=e.childNodes[b+d],e=e&&e.firstChild,e=e&&e.firstChild,e&&(e.opacity=c))}
+        }
+        var j,k,l=["webkit","Moz","ms","O"],m={
+        }
+        ,n={
+          lines:12,length:7,width:5,radius:10,scale:1,corners:1,color:"#000",opacity:.25,rotate:0,direction:1,speed:1,trail:100,fps:20,zIndex:2e9,className:"spinner",top:"50%",left:"50%",shadow:!1,hwaccel:!1,position:"absolute"};
+        if(h.defaults={
+        }
+           ,f(h.prototype,{
+          spin:function(b){
+            this.stop();
+            var c=this,d=c.opts,f=c.el=a(null,{
+              className:d.className}
+                                        );
+            if(e(f,{
+              position:d.position,width:0,zIndex:d.zIndex,left:d.left,top:d.top}
+                ),b&&b.insertBefore(f,b.firstChild||null),f.setAttribute("role","progressbar"),c.lines(f,c.opts),!j){
+              var g,h=0,i=(d.lines-1)*(1-d.direction)/2,k=d.fps,l=k/d.speed,m=(1-d.opacity)/(l*d.trail/100),n=l/d.lines;
+              !function o(){
+                h++;
+                for(var a=0;a<d.lines;a++)g=Math.max(1-(h+(d.lines-a)*n)%l*m,d.opacity),c.opacity(f,a*d.direction+i,g,d);
+                c.timeout=c.el&&setTimeout(o,~~(1e3/k))}
+              ()}
+            return c}
+          ,stop:function(){
+            var a=this.el;
+            return a&&(clearTimeout(this.timeout),a.parentNode&&a.parentNode.removeChild(a),this.el=void 0),this}
+          ,lines:function(d,f){
+            function h(b,c){
+              return e(a(),{
+                position:"absolute",width:f.scale*(f.length+f.width)+"px",height:f.scale*f.width+"px",background:b,boxShadow:c,transformOrigin:"left",transform:"rotate("+~~(360/f.lines*k+f.rotate)+"deg) translate("+f.scale*f.radius+"px,0)",borderRadius:(f.corners*f.scale*f.width>>1)+"px"}
+                      )}
+            for(var i,k=0,l=(f.lines-1)*(1-f.direction)/2;k<f.lines;k++)i=e(a(),{
+              position:"absolute",top:1+~(f.scale*f.width/2)+"px",transform:f.hwaccel?"translate3d(0,0,0)":"",opacity:f.opacity,animation:j&&c(f.opacity,f.trail,l+k*f.direction,f.lines)+" "+1/f.speed+"s linear infinite"}
+                                                                           ),f.shadow&&b(i,e(h("#000","0 0 4px #000"),{
+              top:"2px"}
+                                                                                            )),b(d,b(i,h(g(f.color,k),"0 0 1px rgba(0,0,0,.1)")));
+            return d}
+          ,opacity:function(a,b,c){
+            b<a.childNodes.length&&(a.childNodes[b].style.opacity=c)}
+        }
+             ),"undefined"!=typeof document){
+          k=function(){
+            var c=a("style",{
+              type:"text/css"}
+                   );
+            return b(document.getElementsByTagName("head")[0],c),c.sheet||c.styleSheet}
+          ();
+          var o=e(a("group"),{
+            behavior:"url(#default#VML)"}
+                 );
+          !d(o,"transform")&&o.adj?i():j=d(o,"animation")}
+        return h}
+      );
+    </script>
+  </body>
+</html>
